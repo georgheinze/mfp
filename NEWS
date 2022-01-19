@@ -1,0 +1,33 @@
+31.08.2015	1.5.2	Minor corrections (Vignette float options error; function namespace).
+04.02.2015	1.5.1	Minor corrections (Vignette keywords updated).
+15.09.2014	1.5.0	New maintainer; 'vignettes' directory added.
+28.11.2010	1.4.9	Minor corrections in fp.rescale.
+19.09.2010	1.4.8	Call of final fitted glm/coxph model corrected (parent frame was missing).
+01.06.2010	1.4.8	plot.mfp (temporarily) removed. 
+10.05.2010	1.4.8	Correction of rescaling procedure of log trafos in fp.rescale. 
+01.07.2009	1.4.7	summary.mfp added to avoid problems calling summary directly on mfp object.  
+29.08.2008	1.4.6	Minor corrections.  
+21.06.2008	1.4.5	Minor corrections of component 'fit'.  
+05.04.2008	1.4.4	predict.mfp added.  
+12.12.2007	1.4.3	Corrected in object$fit: Use quadratic in ln(X) when powers=(0,0).  
+11.11.2007	1.4.2	Minor corrections to use 'subset' properly and to allow to ignore 'data'. 
+01.03.2007	1.4.0	Data set 'GBSG' from the JRSS-A paper replaced by its Stata version. 
+			'rescale' argument added to function call.
+			'keep' argument added to function call.
+			Verbose output now shows also transformation functions of covariates.
+21.12.2005	1.3.2	Scaling of variables is added to model fit used for output component 'fit'. 
+21.09.2005	1.3.1	Output corrected for FP2 with equal powers
+			mfp now works even without any FP call
+			New argument 'method' to select method for tie handling in Cox models
+			Vignette updated.
+01.05.2005	1.3.0	Changes in the primary ordering of variables
+			Scaling changed
+			Likelihood ratio tests are now used for all selections
+			Plot of functional form corrected
+			Print function corrected
+			Value of mfp fit has new component `fit'
+04.08.2004	1.2.2	plot.mfp changed: new argument `var'.
+			New dataset `bodyfat' to be used as an example for linear regression.
+			Vignette included.
+31.07.2004	1.2.1	Original port
+

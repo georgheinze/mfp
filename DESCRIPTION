@@ -1,0 +1,11 @@
+Package: mfp
+Version: 1.5.2.1
+Date: 2022-01-19
+Title: Multivariable Fractional Polynomials
+Authors@R: c(person("Gareth", "Ambler", role=c("aut", "cre"), email="gareth@stats.ucl.ac.uk"),
+			 person("Axel","Benner", role=c("aut"), email="benner@dkfz.de"))
+Maintainer: Georg Heinze <georg.heinze@meduniwien.ac.at>
+Depends: survival
+Description: Fractional polynomials are used to represent curvature in regression models. A key reference is Royston and Altman, 1994.
+License: GPL (>= 2)
+BugReports: https://github.com/georgheinze/mfp/issues/
