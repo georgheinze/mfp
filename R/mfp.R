@@ -1,5 +1,5 @@
 mfp <- function (formula = formula(data), data = parent.frame(), family = gaussian, method = c("efron", "breslow"),
-    subset = NULL, na.action = na.omit, init = NULL, alpha = 0.05, select = 1, maxits = 20, keep = NULL, rescale = TRUE, verbose = FALSE, 
+    subset = NULL, na.action = na.omit, init = NULL, alpha = 0.05, select = 1, maxits = 20, keep = NULL, rescale = FALSE, verbose = FALSE, 
     x = TRUE, y = TRUE) 
 {
 #
