@@ -7,7 +7,10 @@ Predict method for mfp fits
 Obtains predictions from an "mfp" object
 }
 \usage{
-predict.mfp(object, newdata, type = c("link", "response", "lp", "risk", "expected", "terms"), terms, ref = NULL, seq = NULL, se.fit = FALSE, dispersion = NULL, na.action = na.pass, collapse, safe = FALSE, ...)
+  \method{predict}{mfp}(object, newdata,
+  type = c("link", "response", "lp", "risk", "expected", "terms"), terms,
+  ref = NULL, seq = NULL, se.fit = FALSE, dispersion = NULL,
+  na.action = na.pass, collapse, safe = FALSE, ...)
 }
 
 \arguments{
@@ -48,20 +51,9 @@ predict.mfp(object, newdata, type = c("link", "response", "lp", "risk", "expecte
     further arguments used by \code{predict.glm} or \code{predict.coxph}.
 }
 }
-\details{
 
-}
 \value{
 If \code{type = "terms"}, a list with term predictions relative to the reference value. Otherwise, a prediction object based on \code{predict.glm} or \code{predict.coxph}.
-}
-\references{
-
-}
-\author{
-
-}
-\note{
-
 }
 
 \seealso{
