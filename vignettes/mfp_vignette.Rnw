@@ -20,6 +20,7 @@
 \setlength{\textheight}{23.5cm}
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 \title{Multivariable Fractional Polynomials}
 \author{Axel Benner}
@@ -216,11 +217,32 @@ Details of the FP transformations are given in the  {\tt fptable} value of the r
 f$fptable
 @
 
-The final model uses a second degree fractional polynomial for the number of positive lymphnodes with powers 0.5 and 3. 
+The final model uses a second degree fractional polynomial for the number of positive lymphnodes with powers 0.5 and 3. The estimated functional from can be visualized using {\tt predict.mfp} (\ref{fig2}).
+
+\begin{figure}[h]
+\center
+<<FIG2, fig = TRUE, echo = TRUE>>=
+vizmfp <- predict(f, type = "terms", terms = "posnodal", seq = 1:50, ref = 5)
+
+library(ggplot2)
+ggplot(vizmfp$posnodal, aes(x=posnodal, y=contrast)) + 
+  geom_line(linewidth = 0.8, col = "blue") +
+  geom_ribbon(aes(ymin=contrast - 1.96*stderr, ymax=contrast + 1.96*stderr),
+              alpha=0.1, linetype = 0) +
+  scale_y_continuous(name="Hazard ratio",
+                     breaks=log(c(0.5, 0.8, 1, 1.25, 1.5, 2, 3, 4)),
+                     labels=c(0.5, 0.8, 1, 1.25, 1.5, 2, 3, 4)) +
+  theme_bw()
+  
+@
+\caption{\label{fig2} Predicted functional form for the number of positive lymphnodes relative to a reference value of 5}
+\end{figure}
+
 
 The value {\tt fit} of the resulting mfp object can be used  for survival curve estimation of the final model fit  (\ref{fig1}).
 
 \begin{figure}[h]
+\centering
 <<FIG1, fig=TRUE, width=6, height=6, echo=FALSE>>=
 pf <- survfit(f$fit)  
 plot(pf, col=c("red","green"), xlab="Time (years)", ylab="Recurrence free survival rate", xscale=365.25)
@@ -240,7 +262,7 @@ plot(pf, col=c("red","green"), xlab="Time (years)", ylab="Recurrence free surviv
 %functional form of the influence of the number of positive lymph nodes ({\tt posnodal}) on the log relative hazard of tumor recurrence, 
 %and the partial residuals plot for {\tt posnodal}.}
 %\end{figure}
-
+@
 \addcontentsline{toc}{section}{References}
 
 \bibliographystyle{acm}
