@@ -149,7 +149,7 @@ if(cox){
         gauss <- (family$family == "gaussian")
         fit <- mfp.fit(X, Y, FALSE, gauss, df.list, scale.list, 
             alpha.list, select.list, verbose = verbose, family = family, 
-            xnames = xnames, maxits = maxits)
+            xnames = xnames, maxits = maxits, offset = offset)
         attr(fit, "class") <- c("mfp", "glm", "lm")
     }
 #
