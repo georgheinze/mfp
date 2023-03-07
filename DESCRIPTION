@@ -9,3 +9,7 @@ Depends: survival
 Description: Fractional polynomials are used to represent curvature in regression models. A key reference is Royston and Altman, 1994.
 License: GPL (>= 2)
 BugReports: https://github.com/georgheinze/mfp/issues/
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
