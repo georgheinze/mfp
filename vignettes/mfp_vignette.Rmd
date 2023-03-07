@@ -31,41 +31,30 @@ for each continuous covariate while fixing the current functional forms of the o
 **mfp.object** is an object representing a fitted **mfp** model. 
 Class **mfp** inherits from either glm or coxph depending on the type of model fitted.
 In addition to the standard glm/coxph components the following components are included in an 
-**mfp** object
-\begin{description}
-\item[x]  
-the final FP transformations that are contained in the design matrix x. 
-The covariate "z" with 4 df (second-degree FP) has corresponding columns "z.1" and "z.2" in x.
-A first-degree FP covariate "z" would have one column "z.1".
-\item[powers]  
-a matrix containing the best FP powers for each covariate. 
-If a covariate has less than two powers NAs will fill the appropriate cell of the matrix.
-\item[pvalues]     
-a matrix containing the P-values from the ''closed test procedure'' together with the best powers chosen. 
-Briefly p.null is the P-value for the test of inclusion (see mfp), p.lin corresponds to the 
-test of nonlinearity and p.FP the test of simplification by comparing first degree (FP1) and second degree (FP2) transformations. 
-The best first degree FP power (power2) and best second degree FP powers (power4.1 and power4.2) are also given. The numbers 2 and 4 describe the corresponding degrees of freedom.
-\item[scale]   
-all covariates are shifted and rescaled before being power transformed if nonpositive values 
-are encountered or the range of values of the covariates is reasonably large. 
-If x' would be used instead of x where x' = (x+a)/b the parameters a (shift) and b (scale) 
-are contained in the matrix scale.
-\item[df.initial]  
-a vector containing the degrees of freedom allocated to each covariate corresponding to the degree of FP (m=4 for second degree FP, m=2 for first degree FP).
-\item[df.final]    
-a vector containing the degrees of freedom of each covariate at convergence of the backfitting 
-algorithm (m=4 for second degree FP, m=2 for first degree FP, m=1 for untransformed variable, m=0 if covariate was excluded).
-\item[dev]     
-the deviance of the final model.
-\item[dev.lin]     
-the deviance of the model that uses the linear predictor of untransformed  covariates.
-\item[dev.null]    
-the deviance of the null model.
-\item[fptable]     
-the table of the final fp transformations.
-\item[fit]     
-a call of the corresponding glm or cox model using the selected and (possibly) FP  transformed variables of the final model.
-\end{description}
+**mfp** object:
+
+* **x**: the final FP transformations that are contained in the design matrix x. The covariate "z" with 4 df (second-degree FP) has corresponding columns "z.1" and "z.2" in x. A first-degree FP covariate "z" would have one column "z.1".
+
+* **powers**: a matrix containing the best FP powers for each covariate. If a covariate has less than two powers NAs will fill the appropriate cell of the matrix.
+
+* **pvalues**: a matrix containing the P-values from the ''closed test procedure'' together with the best powers chosen. Briefly p.null is the P-value for the test of inclusion (see mfp), p.lin corresponds to the test of nonlinearity and p.FP the test of simplification by comparing first degree (FP1) and second degree (FP2) transformations. The best first degree FP power (power2) and best second degree FP powers (power4.1 and power4.2) are also given. The numbers 2 and 4 describe the corresponding degrees of freedom.
+
+* **scale**: all covariates are shifted and rescaled before being power transformed if nonpositive values are encountered or the range of values of the covariates is reasonably large. If x' would be used instead of x where x' = (x+a)/b the parameters a (shift) and b (scale) are contained in the matrix scale.
+
+* **df.initial**: a vector containing the degrees of freedom allocated to each covariate corresponding to the degree of FP (m=4 for second degree FP, m=2 for first degree FP).
+
+* **df.final**: a vector containing the degrees of freedom of each covariate at convergence of the backfitting algorithm (m=4 for second degree FP, m=2 for first degree FP, m=1 for untransformed variable, m=0 if covariate was excluded).
+
+* **dev**: the deviance of the final model.
+
+* **dev.lin**: the deviance of the model that uses the linear predictor of untransformed  covariates.
+
+* **dev.null**: the deviance of the null model.
+
+* **fptable**: the table of the final fp transformations.
+
+* **fit**: a call of the corresponding glm or cox model using the selected and (possibly) FP  transformed variables of the final model.
+
 
 ## Usage in R
 
@@ -125,19 +114,17 @@ prespecified minimum (a null model) to a prespecified maximum (an FP) according 
 ordered sequence of test results.
 
 The algorithm works as follows:
-\begin{enumerate}
-\item Perform a 4 df test at the $\alpha$ level of the best-fitting second-degree FP against 
-the null model. 
-If the test is not significant, drop $x$ and stop, otherwise continue.
-\item Perform a 3 df test at the $\alpha$ level of the best-fitting second-degree FP against 
-a straight line. 
-If the test is not significant, stop (the final model is a straight line), otherwise continue.
-\item Perform a 2 df test at the $\alpha$ level of the best-fitting second-degree FP against 
-the best-fitting first-degree FP. 
-If the test is significant, the final model is the FP with $m=2$, otherwise the FP with $m=1$. 
-\end{enumerate}
-The tests in step 1, 2 and 3 are of overall association, non-linearity and between a simpler 
-or more complex FP model, respectively.
+
+1. Perform a 4 df test at the $\alpha$ level of the best-fitting second-degree FP against 
+the null model. If the test is not significant, drop $x$ and stop, otherwise continue.
+
+2. Perform a 3 df test at the $\alpha$ level of the best-fitting second-degree FP against 
+a straight line. If the test is not significant, stop (the final model is a straight line), otherwise continue.
+
+3. Perform a 2 df test at the $\alpha$ level of the best-fitting second-degree FP against 
+the best-fitting first-degree FP. If the test is significant, the final model is the FP with $m=2$, otherwise the FP with $m=1$. 
+
+The tests in step 1, 2 and 3 are of overall association, non-linearity and between a simpler or more complex FP model, respectively.
 
 ## Example
 
