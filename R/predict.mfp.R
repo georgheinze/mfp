@@ -74,7 +74,7 @@ if(type == "terms"){
     coefs <- summary(object)$coefficients[indices]
     
     # get fp functions
-    strs <- unlist(strsplit(object$trafo[variable, ], ")\\+")) # extract transformations as strings
+    strs <- unlist(strsplit(object$trafo[variable, ], ")\\+")) # extract transformations as strings (the closing bracket is included to deal with cases where there is a + within an fp transformation)
     fp.list <- lapply(1:length(strs), function(i){
       if(i < length(strs)) strs[i] <- paste0(strs[i], ")") # the closing bracket that is lost in the stringsplit needs to be added again (except for the last string)
       eval(parse(text = paste("function(", variable, "){", strs[i], "}"))) # create functions
@@ -84,9 +84,22 @@ if(type == "terms"){
     x0 <- sapply(fp.list, function(f) f(seq.int) - f(ref.int))
     contrast <- x0 %*% coefs 
     
+    # similarly for first and second derivative
+    contrast.d1 <- sapply(fp.list, function(f){
+      sapply(seq.int, function(x){
+        numDeriv::grad(f, x) - numDeriv::grad(f, ref.int)
+      })
+    })  %*% coefs
+    
+    contrast.d2 <- sapply(fp.list, function(f){
+      sapply(seq.int, function(x){
+        numDeriv::hessian(f, x) - numDeriv::hessian(f, ref.int)
+      })
+    })  %*% coefs
+    
     variance <- sapply(1:length(seq.int), function(X) x0[X,, drop=F] %*% vcov %*% t(x0[X,,drop=F]))
     stderr <- sqrt(variance)
-    res <- data.frame(variable=seq.int, contrast=contrast, stderr=stderr, ref=ref.int, x0=x0)
+    res <- data.frame(variable=seq.int, contrast=contrast, stderr=stderr, ref=ref.int, x0=x0, contrast.d1, contrast.d2)
     colnames(res)[1] <- variable
     
     return(res)

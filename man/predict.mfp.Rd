@@ -53,7 +53,9 @@ Obtains predictions from an "mfp" object
 }
 
 \value{
-If \code{type = "terms"}, a list with term predictions relative to the reference value. Otherwise, a prediction object based on \code{predict.glm} or \code{predict.coxph}.
+If \code{type = "terms"}, a list with term predictions for each variable including the contrast to the reference value, standard errors, and contrasts of the first and secon derivative.
+
+Otherwise, a prediction object based on \code{predict.glm} or \code{predict.coxph}.
 }
 
 \seealso{

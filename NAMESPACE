@@ -1,4 +1,4 @@
-import(stats, graphics, survival)
+import(stats, graphics, survival, numDeriv)
 importFrom("utils", "getFromNamespace")
 
 export(mfp, fp, cox)
