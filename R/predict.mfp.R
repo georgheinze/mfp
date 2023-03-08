@@ -1,4 +1,4 @@
-predict.mfp <- function(object, newdata, type = c("link", "response", "lp", "risk", "expected", "terms"), terms, ref = NULL, seq = NULL, se.fit = FALSE, 
+predict.mfp <- function(object, newdata, type = c("link", "response", "lp", "risk", "expected", "terms"), terms = NULL, ref = NULL, seq = NULL, se.fit = FALSE, 
 	dispersion = NULL, na.action = na.pass, collapse, safe = FALSE, ...) 
 {
 # for glm: type in c("lp", "risk", "expected", "terms")
@@ -29,14 +29,42 @@ if(type != "terms"){
 
 if(type == "terms"){
   
-  # loop over all variables and bind together if necessary
-  res.list <- lapply(terms, function(variable){
-    
-    # set default for seq and ref
-    if(is.null(seq)) seq <- seq(min(object$fit$data[, variable], na.rm = TRUE),
-                                max(object$fit$data[, variable], na.rm = TRUE),
-                                length.out = 100)
-    if(is.null(ref)) ref <- mean(object$fit$data[, variable], na.rm = TRUE) # use mean value as default reference
+  
+  all.terms <- colnames(object$X)
+  
+  # exclude factor variables
+  bool.fact <- !apply(object$X, 2, function(x) length(unique(x)) == 2 && all(sort(unique(x)) == c(0, 1)))
+  all.terms <- all.terms[bool.fact] 
+  
+  # only keep selected variables
+  bool.selected <- sapply(all.terms, function(x) any(grepl(x, names(object$coefficients))))
+  all.terms <- all.terms[bool.selected] 
+  
+  # check that only "valid" variables are used
+  if(!all(terms %in% all.terms)) stop("Invalid terms. Note that term prediction for factor variables is not yet supported.")
+  
+  
+  # if no terms specified do for all "valid" variables, i.e. excluding factor variables
+  if(is.null(terms)) terms <- all.terms
+  
+  # set default for seq (range) and ref (mean)
+  if(is.null(seq)) seq <- lapply(terms, function(variable){
+    seq(min(object$X[, variable], na.rm = TRUE),
+        max(object$X[, variable], na.rm = TRUE),
+        length.out = 100)
+  })
+  if(is.null(ref)) ref <- lapply(terms, function(variable){
+    mean(object$X[, variable], na.rm = TRUE) # use mean value as default reference
+  })
+  
+  # if there is only 1 term and seq and ref are not given as lists transform them to a list
+  if(length(terms) != length(seq) | length(terms) != length(ref)){
+    stop("seq and ref should be lists of the same length as terms.")
+  }
+  
+  
+  # loop over all variables
+  res.list <- Map(function(variable, seq.int, ref.int){
     
     # get indices by matching variable name and coefficient names
     indices <- which(grepl(paste0(variable, "\\."), names(object$coefficients)))
@@ -46,24 +74,25 @@ if(type == "terms"){
     coefs <- summary(object)$coefficients[indices]
     
     # get fp functions
-    strs <- unlist(strsplit(object$trafo[variable, ], "\\+")) # extract transformations as strings
+    strs <- unlist(strsplit(object$trafo[variable, ], ")\\+")) # extract transformations as strings
     fp.list <- lapply(1:length(strs), function(i){
+      if(i < length(strs)) strs[i] <- paste0(strs[i], ")") # the closing bracket that is lost in the stringsplit needs to be added again (except for the last string)
       eval(parse(text = paste("function(", variable, "){", strs[i], "}"))) # create functions
     })
     
     # compute contrast
-    x0 <- sapply(fp.list, function(f) f(seq) - f(ref))
+    x0 <- sapply(fp.list, function(f) f(seq.int) - f(ref.int))
     contrast <- x0 %*% coefs 
     
-    variance <- sapply(1:length(seq), function(X) x0[X,, drop=F] %*% vcov %*% t(x0[X,,drop=F]))
+    variance <- sapply(1:length(seq.int), function(X) x0[X,, drop=F] %*% vcov %*% t(x0[X,,drop=F]))
     stderr <- sqrt(variance)
-    res <- data.frame(variable=seq, contrast=contrast, stderr=stderr, ref=ref, x0=x0)
+    res <- data.frame(variable=seq.int, contrast=contrast, stderr=stderr, ref=ref.int, x0=x0)
     colnames(res)[1] <- variable
     
     return(res)
     
     
-  }) |> setNames(terms)
+  }, terms, seq, ref) |> setNames(terms)
   
   return(res.list)
 }

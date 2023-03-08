@@ -188,7 +188,7 @@ f$fptable
 The final model uses a second degree fractional polynomial for the number of positive lymphnodes with powers 0.5 and 3. The estimated functional from can be visualized using **predict.mfp**.
 
 ```{r fig2}
-vizmfp <- predict(f, type = "terms", terms = "posnodal", seq = 1:50, ref = 5)
+vizmfp <- predict(f, type = "terms", terms = "posnodal", seq = list(1:50), ref = list(5))
 
 plot(vizmfp$posnodal$posnodal, exp(vizmfp$posnodal$contrast), type = "n", log = "y",
      xlab = "posnodal", ylab = "Hazard Ratio", ylim = c(0.1, 5))
