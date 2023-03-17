@@ -100,7 +100,6 @@ if(type == "terms"){
     variance <- sapply(1:length(seq.int), function(X) x0[X,, drop=F] %*% vcov %*% t(x0[X,,drop=F]))
     stderr <- sqrt(variance)
     res <- data.frame(variable=seq.int, contrast=contrast, stderr=stderr, ref=ref.int, x0=x0, contrast.d1, contrast.d2)
-    colnames(res)[1] <- variable
     
     return(res)
     
