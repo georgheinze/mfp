@@ -1,4 +1,4 @@
-mfp.fit <- function(x, y, cox, gauss, df, scaling, alpha, select, verbose = TRUE, xnames = NULL, maxits = 20, ...)
+mfp.fit <- function(x, y, cox, gauss, df, scaling, alpha, select, verbose = TRUE, xnames = NULL, maxits = 20, br = FALSE, ...)
 {
     int <- as.numeric(!cox) # intercept
     nx <- ncol(x) - int
@@ -94,7 +94,7 @@ mfp.fit <- function(x, y, cox, gauss, df, scaling, alpha, select, verbose = TRUE
 						scale.mx[j, 2] <- xj.transform$scale
 					}
                 }
-                fitj <- fp.fit(cbind(xj, x.work[,  -num, drop=FALSE]), y, df[j], dfr, cox, gauss, scale.mx[j, 1], scale.mx[j, 2], ...)
+                fitj <- fp.fit(cbind(xj, x.work[,  -num, drop=FALSE]), y, df[j], dfr, cox, gauss, scale.mx[j, 1], scale.mx[j, 2], br, ...)
                 res <- fp.sel(fitj, alpha[j], select[j])
                 best.fitj <- res$results
                 fit.fitj <- res$fit
@@ -137,6 +137,7 @@ mfp.fit <- function(x, y, cox, gauss, df, scaling, alpha, select, verbose = TRUE
     }
     else {
         fitter <- get("glm.fit")
+        if(br) fitter <- getFromNamespace("brglmFit", "brglm2")
     }
     fit <- fitter(x.work, y, ...)
     fit$x <- x.work

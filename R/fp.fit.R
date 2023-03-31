@@ -1,4 +1,4 @@
-fp.fit <- function(X, Y, df, dfr, cox, gauss, shift, scale, ...)
+fp.fit <- function(X, Y, df, dfr, cox, gauss, shift, scale, br, ...)
 {
 #
 # df defines DegreesOfFreedom of test and also degree of FP to test (df=1: linear, df=2: FP1, df=4: FP2)
@@ -21,6 +21,7 @@ fp.fit <- function(X, Y, df, dfr, cox, gauss, shift, scale, ...)
     }
     else {
         fitter <- get("glm.fit")
+        if(br) fitter <- get("brglmFit")
         dv <- "deviance"
     }
     n <- 1 + cox

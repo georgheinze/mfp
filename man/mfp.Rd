@@ -10,7 +10,7 @@ hazards (Cox) model.
 	mfp(formula, data, family = gaussian, method = c("efron", "breslow"),
 	    subset = NULL, na.action = na.omit, init = NULL, alpha=0.05, 
 	    select = 1, maxits = 20, keep = NULL, rescale = FALSE, 
-	    verbose = FALSE, x = TRUE, y = TRUE)
+	    verbose = FALSE, x = TRUE, y = TRUE, br = FALSE)
 }
 
 \arguments{
@@ -60,6 +60,9 @@ hazards (Cox) model.
 	logical; return the design matrix in the model object?}
  \item{y}{
 	logical; return the response in the model object?}
+	\item{br}{
+	logical; if TRUE generalized linear models are estimated using bias reduction methods. This is based on `brglmFit()` from the `brglm2` package. Defaults to FALSE.
+	}
 }
 \value{
 	an object of class \code{mfp} is returned which either inherits from both glm

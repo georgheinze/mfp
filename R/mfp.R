@@ -1,6 +1,6 @@
 mfp <- function (formula, data, family = gaussian, method = c("efron", "breslow"),
     subset = NULL, na.action = na.omit, init = NULL, alpha = 0.05, select = 1, maxits = 20, keep = NULL, rescale = FALSE, verbose = FALSE, 
-    x = TRUE, y = TRUE) 
+    x = TRUE, y = TRUE, br = FALSE) 
 {
 #
 #
@@ -132,7 +132,7 @@ if(cox){
         fit <- mfp.fit(X, Y, TRUE, FALSE, df.list, scale.list, 
             alpha.list, select.list, verbose = verbose, xnames = xnames, maxits = maxits,
 			strata = strats, offset = offset, init, control, weights = weights, 
-            method = method, rownames = row.names(m))
+            method = method, rownames = row.names(m), br = FALSE)
         if (is.character(fit)) {
             fit <- list(fail = fit)
             attr(fit, "class") <- c("mfp", "coxph")
@@ -149,7 +149,7 @@ if(cox){
         gauss <- (family$family == "gaussian")
         fit <- mfp.fit(X, Y, FALSE, gauss, df.list, scale.list, 
             alpha.list, select.list, verbose = verbose, family = family, 
-            xnames = xnames, maxits = maxits, offset = offset)
+            xnames = xnames, maxits = maxits, offset = offset, br = br)
         attr(fit, "class") <- c("mfp", "glm", "lm")
     }
 #
