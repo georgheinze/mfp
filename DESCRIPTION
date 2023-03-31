@@ -1,6 +1,6 @@
 Package: mfp
-Version: 1.5.2.2
-Date: 2022-01-19
+Version: 1.5.3
+Date: 2023-03-31
 Title: Multivariable Fractional Polynomials
 Authors@R: c(person("Georg", "Heinze", role=c("cre"), email="georg.heinze@meduniwien.ac.at"), 
 			 person("Gareth", "Ambler", role=c("aut"), email="gareth@stats.ucl.ac.uk"),
