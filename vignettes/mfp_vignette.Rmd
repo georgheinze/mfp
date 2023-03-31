@@ -1,0 +1,215 @@
+---
+title: "Multivariable Fractional Polynomials"
+output: rmarkdown::html_vignette
+bibliography: mfp_vignette.bib  
+vignette: >
+  %\VignetteIndexEntry{Multivariable Fractional Polynomials}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+
+
+## Introduction
+
+The **mfp** package is a collection of R [@R04] functions targeted at the use of fractional polynomials (FP) for modelling the influence of continuous covariates on the outcome in regression models, as introduced by @FP94 and 
+modified by @SauRoy99. The model may include binary, categorical or further continuous covariates which are included in the variable selection process but without need of FP transformation. It combines backward elimination with a systematic search for a 'suitable' transformation to represent the influence of each continuous covariate on the outcome. An application of multivariable fractional polynomials (MFP) in modelling prognostic and diagnostic factors in breast cancer is given by @SauRoy99. The stability of the models selected is investigated in @RoySau03. Briefly, fractional polynomials models are useful when one wishes to preserve the continuous nature of the covariates in a regression model, but suspects that some or all of the 
+relationships may be non-linear. At each step of a `backfitting' algorithm MFP constructs a fractional polynomial transformation
+for each continuous covariate while fixing the current functional forms of the other covariates. The algorithm terminates when no more covariate is excluded and the functional forms of the continuous covariates do not change anymore.
+
+## Inventory of functions
+
+**mfp.object** is an object representing a fitted **mfp** model. 
+Class **mfp** inherits from either glm or coxph depending on the type of model fitted.
+In addition to the standard glm/coxph components the following components are included in an 
+**mfp** object:
+
+* **x**: the final FP transformations that are contained in the design matrix x. The covariate "z" with 4 df (second-degree FP) has corresponding columns "z.1" and "z.2" in x. A first-degree FP covariate "z" would have one column "z.1".
+
+* **powers**: a matrix containing the best FP powers for each covariate. If a covariate has less than two powers NAs will fill the appropriate cell of the matrix.
+
+* **pvalues**: a matrix containing the P-values from the ''closed test procedure'' together with the best powers chosen. Briefly p.null is the P-value for the test of inclusion (see mfp), p.lin corresponds to the test of nonlinearity and p.FP the test of simplification by comparing first degree (FP1) and second degree (FP2) transformations. The best first degree FP power (power2) and best second degree FP powers (power4.1 and power4.2) are also given. The numbers 2 and 4 describe the corresponding degrees of freedom.
+
+* **scale**: all covariates are shifted and rescaled before being power transformed if nonpositive values are encountered or the range of values of the covariates is reasonably large. If x' would be used instead of x where x' = (x+a)/b the parameters a (shift) and b (scale) are contained in the matrix scale.
+
+* **df.initial**: a vector containing the degrees of freedom allocated to each covariate corresponding to the degree of FP (m=4 for second degree FP, m=2 for first degree FP).
+
+* **df.final**: a vector containing the degrees of freedom of each covariate at convergence of the backfitting algorithm (m=4 for second degree FP, m=2 for first degree FP, m=1 for untransformed variable, m=0 if covariate was excluded).
+
+* **dev**: the deviance of the final model.
+
+* **dev.lin**: the deviance of the model that uses the linear predictor of untransformed  covariates.
+
+* **dev.null**: the deviance of the null model.
+
+* **fptable**: the table of the final fp transformations.
+
+* **fit**: a call of the corresponding glm or cox model using the selected and (possibly) FP  transformed variables of the final model.
+
+
+## Usage in R
+
+An **mfp.object** will be created by application of function **mfp**. 
+
+A typical call of an mfp model has the form **response $\sim$ terms** where **response** is the 
+(numeric) response vector and **terms** is a series of terms, separated by $+$ operators,
+which specifies a linear predictor for **response** provided by the **formula** 
+argument of the function call.
+
+
+```{r}
+library(mfp)
+
+str(mfp)
+```
+
+Fractional polynomial terms are indicated by **fp**. 
+
+For **binomial** models the response can also be specified as a **factor**. 
+If a Cox proportional hazards model is required then the outcome need to be specified using 
+the **Surv()** notation. 
+
+The argument **family** describes the error distribution and link function to
+be used in the model. 
+This can be a character string naming a family function, a family function or the result 
+of a call to a family function. 
+
+Argument **alpha** sets the global FP selection level for all covariates. 
+Different selection levels for individual covariates can be chosen by using the **fp** function.
+The variable selection level for all covariates is set by **select**. 
+Values for individual fractional polynomials may be set using the **fp** function.
+
+The function **fp** defines a fractional polynomial object for a single input 
+variable. 
+
+
+```{r}
+str(fp)
+```
+
+In addition to **alpha** and **select** the **scale** argument of the 
+**fp** function denotes the use of pre-transformation scaling to avoid possible 
+numerical problems or for variables with non-positive values.
+
+### Model selection
+The original Stata implementation of **mfp** uses two different selection procedures
+for a single continuous covariate $x$, a sequential selection procedure and a closed 
+testing selection procedure (**ra2**,  @AmbRoy01).
+In the R implementation only the **ra2** algorithm is used which is also the default in the Stata and SAS implementations of **mfp**. 
+ 
+The **ra2** algorithm is described in @AmbRoy01 and @SauRoy02. 
+It uses a closed test procedure @MarPerGab76 which maintains 
+approximately the correct Type I error rate for each component test. 
+The procedure allows the complexity of candidate models to increase progressively from a 
+prespecified minimum (a null model) to a prespecified maximum (an FP) according to an 
+ordered sequence of test results.
+
+The algorithm works as follows:
+
+1. Perform a 4 df test at the $\alpha$ level of the best-fitting second-degree FP against 
+the null model. If the test is not significant, drop $x$ and stop, otherwise continue.
+
+2. Perform a 3 df test at the $\alpha$ level of the best-fitting second-degree FP against 
+a straight line. If the test is not significant, stop (the final model is a straight line), otherwise continue.
+
+3. Perform a 2 df test at the $\alpha$ level of the best-fitting second-degree FP against 
+the best-fitting first-degree FP. If the test is significant, the final model is the FP with $m=2$, otherwise the FP with $m=1$. 
+
+The tests in step 1, 2 and 3 are of overall association, non-linearity and between a simpler or more complex FP model, respectively.
+
+## Example
+
+### Cox proportional hazards model
+We use the dataset **GBSG** which contains data from a study of the German Breast Cancer Study Group for patients with node-positive breast cancer. 
+
+
+```{r}
+data(GBSG)
+str(GBSG)
+```
+
+
+The response variable is recurrence free survival time (**Surv(rfst, cens)**). 
+Complete data on 7 prognostic factors is available for 686
+patients. 
+The median follow-up was about 5 years, 299 events were
+observed for recurrence free survival time. 
+We use a Cox proportional hazards regression to model the hazard of recurrence by the 7 prognostic factors of which 5 are continuous, age of the patients in years (**age**), tumor size in mm 
+(**tumsize**), number of positive lymphnodes (**posnodal**), progesterone receptor in 
+fmol (**prm**), estrogen receptor in fmol (**esm**); one is binary, menopausal status (**menostat**); and one is ordered categorical with three levels, tumor grade (**tumgrad**). The additional variable **htreat** describes if a hormonal therapy  was applied and is used as stratification variable.
+
+We use **mfp** to build a model from the initial set of 7 covariates using the 
+backfitting model selection algorithm. 
+We set the global variable selection level to 0.05 and use the default FP selection level. 
+
+By using **fp()** in the model formula a fractional polynomial transformation with possibly
+pre-transformation scaling is estimated. 
+This is done here for **tumsize**, **posnodal**, **prm**, and **esm**.
+Otherwise a linear form of the unscaled variable is used, as for **age**.
+Categorical factors are included without transformation. 
+Hormonal therapy (**htreat**) was used as stratification variable.
+
+By **verbose=TRUE** the process of FP and variable selection is printed.
+
+```{r}
+f <- mfp(Surv(rfst, cens) ~ strata(htreat)+age+fp(tumsize)+fp(posnodal)+fp(prm)+fp(esm)
+        +menostat+tumgrad, family = cox, data = GBSG, select=0.05, verbose=TRUE)
+```
+
+After two cycles the final model is selected. 
+Of the possible input variables tumor size (**tumsize**), menopausal status (**menostat**), age and estrogen receptor (**esm**) were excluded from the model.
+Only for variable **posnodal** a nonlinear transformation was chosen. 
+Prescaling was used for esm, prm and tumsize.
+
+Details of the model fit are given by **summary**. 
+
+```{r}
+summary(f)
+```
+
+Details of the FP transformations are given in the  **fptable** value of the resulting **mfp.object**.
+
+
+
+```{r}
+f$fptable
+```
+
+
+The final model uses a second degree fractional polynomial for the number of positive lymphnodes with powers 0.5 and 3. The estimated functional from can be visualized using **predict.mfp**.
+
+```{r fig2}
+vizmfp <- predict(f, type = "terms", terms = "posnodal", seq = list(1:50), ref = list(5))
+
+plot(vizmfp$posnodal$variable, exp(vizmfp$posnodal$contrast), type = "n", log = "y",
+     xlab = "posnodal", ylab = "Hazard Ratio", ylim = c(0.1, 5))
+polygon(x = c(vizmfp$posnodal$variable, rev(vizmfp$posnodal$variable)),
+        y = exp(c(vizmfp$posnodal$contrast - 1.96 * vizmfp$posnodal$stderr,
+              rev(vizmfp$posnodal$contrast + 1.96 * vizmfp$posnodal$stderr))),
+        col = "grey", border = NA)
+grid()
+lines(vizmfp$posnodal$variable, exp(vizmfp$posnodal$contrast), type = "l", col = 4, lwd = 2)
+
+```
+
+
+The value **fit** of the resulting mfp object can be used  for survival curve estimation of the final model fit.
+
+```{r fig1}
+pf <- survfit(f$fit)  
+plot(pf, col=c("red","green"), xlab="Time (years)", ylab="Recurrence free survival rate", xscale=365.25)
+```
+
+
+## References
+
+

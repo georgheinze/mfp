@@ -8,8 +8,9 @@ hazards (Cox) model.
 }
 \usage{
 	mfp(formula, data, family = gaussian, method = c("efron", "breslow"),
-        subset, na.action, init, alpha=0.05, select = 1, maxits = 20,
-        keep = NULL, rescale = TRUE, verbose = FALSE, x = TRUE, y = TRUE)
+	    subset = NULL, na.action = na.omit, init = NULL, alpha=0.05, 
+	    select = 1, maxits = 20, keep = NULL, rescale = FALSE, 
+	    verbose = FALSE, x = TRUE, y = TRUE)
 }
 
 \arguments{
@@ -52,7 +53,7 @@ hazards (Cox) model.
  \item{keep}{
 	keep one or more variables in the model. The selection level for these variables will be set to 1.}
  \item{rescale}{
-	logical; uses re-scaling to show the parameters for covariates on their original scale (default TRUE).}
+	logical; uses re-scaling to show the parameters for covariates on their original scale (default TRUE). Should only be used if no non-linear terms are selected.}
  \item{verbose}{
 	logical; run in verbose mode (default FALSE).}
  \item{x}{
