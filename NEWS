@@ -1,4 +1,4 @@
-31.03.2023  1.5.3 Added term prediction including first and second derivatives
+31.03.2023  1.5.3 Added term predictions including first and second derivatives and corrected the use of offsets in glm models.
 31.08.2015	1.5.2	Minor corrections (Vignette float options error; function namespace).
 04.02.2015	1.5.1	Minor corrections (Vignette keywords updated).
 15.09.2014	1.5.0	New maintainer; 'vignettes' directory added.
