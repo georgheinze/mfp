@@ -7,6 +7,8 @@ type <- match.arg(type)
 
 if(type != "terms"){
   
+  if(!is.null(terms)) stop("terms should only be specified if type = 'terms'")
+  
   if(object$family$family=="Cox") {
     if (is.null(object$terms)) terms = names(object$assign)
     if (!missing(newdata)) 
