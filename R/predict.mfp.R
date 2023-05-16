@@ -3,6 +3,9 @@ predict.mfp <- function(object, newdata, type = c("link", "response", "lp", "ris
 {
 
 type <- match.arg(type)
+if(object$family$family == "Cox"){ # for cox models 'link' should be 'lp'
+  if(type == "link") type <- "lp"
+}
 
 if(type != "terms"){
   
