@@ -1,9 +1,11 @@
 predict.mfp <- function(object, newdata, type = c("link", "response", "lp", "risk", "expected", "terms"), terms = NULL, ref = NULL, seq = NULL, se.fit = FALSE, 
 	dispersion = NULL, na.action = na.pass, collapse, safe = FALSE, ...) 
 {
-# for glm: type in c("lp", "risk", "expected", "terms")
-# for coxph: type in c("lp", "risk", "expected", "terms")
+
 type <- match.arg(type)
+if(object$family$family == "Cox"){ # for cox models 'link' should be 'lp'
+  if(type == "link") type <- "lp"
+}
 
 if(type != "terms"){
   
@@ -13,20 +15,22 @@ if(type != "terms"){
     if (is.null(object$terms)) terms = names(object$assign)
     if (!missing(newdata)) 
       if (!missing(collapse)) 
-        getFromNamespace("predict.coxph", "survival")(object$fit, newdata = newdata, type = type, se.fit = se.fit, terms = terms, collapse = collapse, safe = safe, ...) 
+        res <- getFromNamespace("predict.coxph", "survival")(object$fit, newdata = newdata, type = type, se.fit = se.fit, terms = terms, collapse = collapse, safe = safe, ...) 
     else
-      getFromNamespace("predict.coxph", "survival")(object$fit, newdata = newdata, type = type, se.fit = se.fit, terms = terms, safe = safe, ...) 
+      res <- getFromNamespace("predict.coxph", "survival")(object$fit, newdata = newdata, type = type, se.fit = se.fit, terms = terms, safe = safe, ...) 
     else
       if (!missing(collapse)) 
-        getFromNamespace("predict.coxph", "survival")(object$fit, type = type, se.fit = se.fit, terms = terms, collapse = collapse, safe = safe, ...) 
+        res <- getFromNamespace("predict.coxph", "survival")(object$fit, type = type, se.fit = se.fit, terms = terms, collapse = collapse, safe = safe, ...) 
     else
-      getFromNamespace("predict.coxph", "survival")(object$fit, type = type, se.fit = se.fit, terms = terms, safe = safe, ...) 
+      res <- getFromNamespace("predict.coxph", "survival")(object$fit, type = type, se.fit = se.fit, terms = terms, safe = safe, ...) 
   } else {
     if (!missing(newdata)) 
-      predict.glm(object$fit, newdata = newdata, type = type, se.fit = se.fit, dispersion = dispersion, terms = terms, na.action = na.action, ...)
+      res <- predict.glm(object$fit, newdata = newdata, type = type, se.fit = se.fit, dispersion = dispersion, terms = terms, na.action = na.action, ...)
     else 
-      predict.glm(object$fit, type = type, se.fit = se.fit, dispersion = dispersion, terms = terms, na.action = na.action, ...)
+      res <- predict.glm(object$fit, type = type, se.fit = se.fit, dispersion = dispersion, terms = terms, na.action = na.action, ...)
   }
+  
+  return(res)
 }
 
 if(type == "terms"){
