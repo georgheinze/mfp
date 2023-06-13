@@ -253,12 +253,13 @@ if(length(tvars1)) {      # are some vars selected?
       tvars[iv] <- vars[-fp.pos][which(!is.na(tv))]
 	} 
     if(length(fp.pos)==0 & length(vars)) {
+      
       if(grepl("TRUE", tvars[iv])){ # if the variable is a factor (and therefore has TRUE added to the name) the match should take this into account. This avoids wrong matches for nested variable names, e.g. V2 and V20.
-        tv <- pmatch(paste0(vars, "TRUE"), tvars[iv])
+        tv <- sapply(vars, function(x) grepl(paste0("^", x, "TRUE"), tvars[iv]))
       } else{
-        tv <- pmatch(vars, tvars[iv])
+        tv <- sapply(vars, function(x) grepl(paste0("^", x, "$"), tvars[iv]))
       }
-      tvars[iv] <- vars[!is.na(tv)]
+      tvars[iv] <- vars[tv]
 	} 
   }
 }
