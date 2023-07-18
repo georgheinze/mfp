@@ -1,4 +1,5 @@
-31.03.2023  	1.5.3	Added term predictions including first and second derivatives.
+18.07.2023  1.5.4 Fixed a bug where variables with nested names were incorrectly excluded from the model.
+31.03.2023  1.5.3	Added term predictions including first and second derivatives.
 			Rewrote vignette as an .Rmd file and added a terms prediction example.
 			Corrected the use of offsets in glm models.
 			Changed rescale default: Now, by default `rescale = FALSE'.
