@@ -5,7 +5,7 @@ Title: Multivariable Fractional Polynomials
 Authors@R: c(person("Georg", "Heinze", role=c("cre"), email="georg.heinze@meduniwien.ac.at"), 
 			 person("Gareth", "Ambler", role=c("aut"), email="gareth@stats.ucl.ac.uk"),
 			 person("Axel","Benner", role=c("aut"), email="benner@dkfz.de"))
-Depends: survival
+Depends: R (>= 4.1.0), survival
 Imports: numDeriv
 Description: Multivariable Fractional Polynomial algorithm for multivariable model-building. Fractional polynomials are used to represent curvature in regression models. A key reference is Royston and Altman, 1994.
 License: GPL (>= 2)
