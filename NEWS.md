@@ -1,3 +1,7 @@
+# mfp 1.5.5
+
+* Fixed a NOTE (link to included package missing) and removed an irrelevant argument.
+
 # mfp 1.5.4
 
 * Fixed a bug where variables with nested names were incorrectly excluded from the model.
