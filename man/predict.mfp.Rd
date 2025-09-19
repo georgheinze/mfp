@@ -10,7 +10,7 @@ Obtains predictions from an "mfp" object
   \method{predict}{mfp}(object, newdata,
   type = c("link", "response", "lp", "risk", "expected", "terms"), terms,
   ref = NULL, seq = NULL, se.fit = FALSE, dispersion = NULL,
-  na.action = na.pass, collapse, safe = FALSE, ...)
+  na.action = na.pass, collapse, ...)
 }
 
 \arguments{
@@ -44,20 +44,17 @@ Obtains predictions from an "mfp" object
   \item{collapse}{
     optional vector of subject identifiers. If specified, the output will contain one entry per subject rather than one entry per observation.
 }
-  \item{safe}{
-        
-}
   \item{\dots}{
-    further arguments used by \code{predict.glm} or \code{predict.coxph}.
+    further arguments used by \code{predict.glm} or \code{survival:predict.coxph}.
 }
 }
 
 \value{
 If \code{type = "terms"}, a list with term predictions for each variable including the contrast to the reference value, standard errors, and contrasts of the first and second derivative.
 
-Otherwise, a prediction object based on \code{predict.glm} or \code{predict.coxph}.
+Otherwise, a prediction object based on \code{predict.glm} or \code{survival:predict.coxph}.
 }
 
 \seealso{
-\code{\link{predict.glm}}, \code{\link{predict.coxph}}
+\code{\link{predict.glm}}, \code{\link[survival:predict.coxph]{predict.coxph}}
 }
