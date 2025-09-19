@@ -1,5 +1,5 @@
 predict.mfp <- function(object, newdata, type = c("link", "response", "lp", "risk", "expected", "terms"), terms = NULL, ref = NULL, seq = NULL, se.fit = FALSE, 
-	dispersion = NULL, na.action = na.pass, collapse, safe = FALSE, ...) 
+	dispersion = NULL, na.action = na.pass, collapse, ...) 
 {
 
 type <- match.arg(type)
@@ -15,14 +15,14 @@ if(type != "terms"){
     if (is.null(object$terms)) terms = names(object$assign)
     if (!missing(newdata)) 
       if (!missing(collapse)) 
-        res <- getFromNamespace("predict.coxph", "survival")(object$fit, newdata = newdata, type = type, se.fit = se.fit, terms = terms, collapse = collapse, safe = safe, ...) 
+        res <- getFromNamespace("predict.coxph", "survival")(object$fit, newdata = newdata, type = type, se.fit = se.fit, terms = terms, collapse = collapse,  ...) 
     else
-      res <- getFromNamespace("predict.coxph", "survival")(object$fit, newdata = newdata, type = type, se.fit = se.fit, terms = terms, safe = safe, ...) 
+      res <- getFromNamespace("predict.coxph", "survival")(object$fit, newdata = newdata, type = type, se.fit = se.fit, terms = terms, ...) 
     else
       if (!missing(collapse)) 
-        res <- getFromNamespace("predict.coxph", "survival")(object$fit, type = type, se.fit = se.fit, terms = terms, collapse = collapse, safe = safe, ...) 
+        res <- getFromNamespace("predict.coxph", "survival")(object$fit, type = type, se.fit = se.fit, terms = terms, collapse = collapse,  ...) 
     else
-      res <- getFromNamespace("predict.coxph", "survival")(object$fit, type = type, se.fit = se.fit, terms = terms, safe = safe, ...) 
+      res <- getFromNamespace("predict.coxph", "survival")(object$fit, type = type, se.fit = se.fit, terms = terms,  ...) 
   } else {
     if (!missing(newdata)) 
       res <- predict.glm(object$fit, newdata = newdata, type = type, se.fit = se.fit, dispersion = dispersion, terms = terms, na.action = na.action, ...)
