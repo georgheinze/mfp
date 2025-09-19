@@ -48,7 +48,7 @@
   }
 }
 \source{
-  e.g. \url{http://lib.stat.cmu.edu/datasets/bodyfat}
+  e.g. \url{https://lib.stat.cmu.edu/datasets/bodyfat}
 }
 \references{
   R.W. Johnson (1996). Fitting percentage of body fat to simple body measurements.

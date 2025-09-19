@@ -1,5 +1,5 @@
 Package: mfp
-Version: 1.5.5
+Version: 1.5.5.1
 Date: 2025-09-19
 Title: Multivariable Fractional Polynomials
 Authors@R: c(person("Georg", "Heinze", role=c("cre"), email="georg.heinze@meduniwien.ac.at"), 
@@ -7,7 +7,7 @@ Authors@R: c(person("Georg", "Heinze", role=c("cre"), email="georg.heinze@meduni
 			 person("Axel","Benner", role=c("aut"), email="benner@dkfz.de"))
 Depends: R (>= 4.1.0), survival
 Imports: numDeriv
-Description: Multivariable Fractional Polynomial algorithm for multivariable model-building. Fractional polynomials are used to represent curvature in regression models. A key reference is Royston and Altman, 1994.
+Description: Multivariable Fractional Polynomial algorithm for model-building. Fractional polynomials are used to represent curvature in regression models. A key reference is Royston and Altman, 1994.
 License: GPL (>= 2)
 BugReports: https://github.com/georgheinze/mfp/issues/
 Suggests: 

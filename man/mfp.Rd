@@ -154,6 +154,6 @@ hazards (Cox) model.
 	survfit(f$fit)  # use proposed coxph model fit for survival curve estimation
 }
 
-\author{ Gareth Ambler and Axel Benner  }
+\author{ Gareth Ambler and Axel Benner, updated by Georg Heinze  }
 
 \keyword{ models }
