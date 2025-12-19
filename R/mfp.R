@@ -124,7 +124,7 @@ if(cox){
         if (!inherits(Y, "Surv")) 
             stop("Response must be a survival object")
         type <- attr(Y, "type")
-        if (type != "right") 
+        if (type != "right" && type != "counting") ### GH251219
             stop("The data must be right censored")
         X <- X[, -1, drop = FALSE]
         control <- coxph.control()
