@@ -76,7 +76,7 @@ Fractional polynomial terms are indicated by **fp**.
 
 For **binomial** models the response can also be specified as a **factor**. 
 If a Cox proportional hazards model is required then the outcome need to be specified using 
-the **Surv()** notation. 
+the **Surv()** notation. Note that while a counting process style is allowed, facilitating modeling of time-dependent variables, the program does not check for overlapping episodes of the same individual which would invalidate inference.
 
 The argument **family** describes the error distribution and link function to
 be used in the model. 

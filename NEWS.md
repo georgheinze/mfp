@@ -1,3 +1,7 @@
+# mfp 1.5.5.2
+
+Allowed counting-process style of Surv() objects for Cox models
+
 # mfp 1.5.5
 
 * Fixed a NOTE (link to included package missing) and removed an irrelevant argument.
